@@ -58,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getQuadrantFromAngle(angle) {
         const normalizedAngle = (angle % 360 + 360) % 360;
-        return Math.floor(normalizedAngle / 90);
+        var quadrant = Math.floor(normalizedAngle / 90) - 1;
+        if (quadrant === -1) quadrant = 3; // Wrap around for the first quadrant
+        return quadrant;
     }
 
     /**
@@ -113,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentQuadrant = getQuadrantFromAngle(handAngle);
         const targetQuadrant = quadrantColors.indexOf(handColor);
         
-        console.log("current=" + currentQuadrant + ", target=" + targetQuadrant);
+        // console.log("current=" + currentQuadrant + ", target=" + targetQuadrant);
         
         // A loss occurs if the hand crosses a boundary AND the quadrant it just left
         // was the target quadrant. This means the player missed their chance.
