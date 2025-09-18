@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
-        score = 0;
+        score = 1;
         handAngle = 0;
         prevAngle = 0;
         gameSpeed = 1.5;
