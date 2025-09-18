@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeStyle = 'black';
         ctx.stroke();
         ctx.restore();
-        console.log(prevAngle + " " + handAngle);
+        // console.log(prevAngle + " " + handAngle);
     }
 
     // ### Game Logic Functions ###
@@ -112,7 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevQuadrant = getQuadrantFromAngle(prevAngle);
         const currentQuadrant = getQuadrantFromAngle(handAngle);
         const targetQuadrant = quadrantColors.indexOf(handColor);
-
+        
+        console.log("current=" + currentQuadrant + ", target=" + targetQuadrant);
+        
         // A loss occurs if the hand crosses a boundary AND the quadrant it just left
         // was the target quadrant. This means the player missed their chance.
         if (prevQuadrant !== currentQuadrant && prevQuadrant === targetQuadrant) {
