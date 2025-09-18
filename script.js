@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quadrantColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f']; // 0:Red, 1:Blue, 2:Green, 3:Yellow
 
     // Game state variables
-    let score = 1;
+    let score = 0;
     let handAngle = 0; // In degrees
     let prevAngle = 0; 
     let handColor;
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getQuadrantFromAngle(angle) {
         // Normalizes angle to 0-359 and returns quadrant index (0, 1, 2, or 3)
         const normalizedAngle = (angle % 360 + 360) % 360;
-        return Math.floor(normalizedAngle / 90) + 90;
+        return Math.floor(normalizedAngle / 90);
     }
 
     function chooseNewHandColor() {
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
-        score = 1;
+        score = 0;
         handAngle = 0;
         prevAngle = 0;
         gameSpeed = 1.5;
