@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeStyle = 'black';
         ctx.stroke();
         ctx.restore();
+        console.log(prevAngle + " " + handAngle);
     }
 
     // ### Game Logic Functions ###
