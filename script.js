@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const centerY = canvas.height / 2;
     const radius = 220;
     const innerRadius = 150;
-    const handLength = 145; // Adjusted length to fit within the ring
+    const handLength = 140;
     const handWidth = 10;
     const quadrantColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f']; // 0:Red, 1:Blue, 2:Green, 3:Yellow
 
     // Game state variables
     let score = 0;
     let handAngle = 0; // In degrees
-    let prevAngle = 0; 
+    let prevAngle = 0; // The angle on the previous frame
     let handColor;
     let handDirection = 1; // 1 for clockwise, -1 for counter-clockwise
     let gameSpeed = 1.5; // Degrees per frame
@@ -29,49 +29,41 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 4; i++) {
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
-            // Angles in canvas start at 3 o'clock.
-            // 0: 3-6 o'clock (Red), 1: 6-9 o'clock (Blue), etc.
             ctx.arc(centerX, centerY, radius, (i * Math.PI) / 2, ((i + 1) * Math.PI) / 2);
             ctx.closePath();
             ctx.fillStyle = quadrantColors[i];
             ctx.fill();
         }
-        // Draw inner circle to make a ring
         ctx.beginPath();
         ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
         ctx.fillStyle = '#34495e';
         ctx.fill();
     }
 
-    /**
-     * **FIXED**: Draws the hand as a line pointing from the center.
-     * This aligns the visual angle (0 degrees = 3 o'clock) with the arc drawing logic.
-     */
     function drawHand() {
         ctx.save();
         ctx.translate(centerX, centerY);
-        ctx.rotate((handAngle * Math.PI) / 180); // Convert game angle to radians
-        
+        ctx.rotate((handAngle * Math.PI) / 180);
         ctx.beginPath();
-        ctx.moveTo(0, 0); // Start at the center
-        ctx.lineTo(handLength, 0); // Draw line outwards along the new x-axis
-        
-        ctx.strokeStyle = handColor;
-        ctx.lineWidth = handWidth;
-        ctx.lineCap = 'round';
+        ctx.rect(-handWidth / 2, -handLength, handWidth, handLength);
+        ctx.fillStyle = handColor;
+        ctx.fill();
+        ctx.strokeStyle = 'black';
         ctx.stroke();
-        
         ctx.restore();
     }
 
     // ### Game Logic Functions ###
 
     function getQuadrantFromAngle(angle) {
-        // Normalizes angle to 0-359 and returns quadrant index (0, 1, 2, or 3)
         const normalizedAngle = (angle % 360 + 360) % 360;
         return Math.floor(normalizedAngle / 90);
     }
 
+    /**
+     * Chooses a new random color for the hand.
+     * It filters out the current hand color to ensure the new color is always different.
+     */
     function chooseNewHandColor() {
         const currentColor = handColor;
         const availableColors = quadrantColors.filter(color => color !== currentColor);
@@ -95,14 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSuccess() {
         score++;
         scoreEl.textContent = `Score: ${score}`;
-        
-        // **FIXED**: Increase speed to make the game harder
-        gameSpeed += 0.15;
-        
-        // Reverse direction
         handDirection *= -1;
-        
-        // Pick a new color
+        gameSpeed += 0.1;
         chooseNewHandColor();
     }
 
@@ -118,19 +104,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function gameLoop() {
         if (!isPlaying) return;
 
+        // --- Main Logic Update ---
         prevAngle = handAngle;
         handAngle += gameSpeed * handDirection;
 
         const prevQuadrant = getQuadrantFromAngle(prevAngle);
-        const currentQuadrant = getQuadrantFromAngle(currentQuadrant);
+        const currentQuadrant = getQuadrantFromAngle(handAngle);
         const targetQuadrant = quadrantColors.indexOf(handColor);
 
-        // Loss condition: if we just left the target quadrant without scoring
+        // A loss occurs if the hand crosses a boundary AND the quadrant it just left
+        // was the target quadrant. This means the player missed their chance.
         if (prevQuadrant !== currentQuadrant && prevQuadrant === targetQuadrant) {
             handleFailure();
-            return; 
+            return; // Stop the loop immediately
         }
         
+        // --- Drawing ---
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawRing();
         drawHand();
