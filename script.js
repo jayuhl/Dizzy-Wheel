@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 220;
-    const innerRadius = 150;
-    const handLength = 140;
-    const handWidth = 10;
+    const innerRadius = 190;
+    const handLength = 180;
+    const handWidth = 16;
     const quadrantColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f']; // 0:Red, 1:Blue, 2:Green, 3:Yellow
 
     // Game state variables
