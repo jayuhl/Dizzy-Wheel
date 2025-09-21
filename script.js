@@ -137,10 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
             e.preventDefault();
-            if (gameOver) {
-                resetGame();
-                return;
-            }
             if (isPlaying) {
                 const currentQuadrant = getQuadrantFromAngle(handAngle);
                 const targetQuadrant = quadrantColors.indexOf(handColor);
@@ -149,6 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     handleFailure();
                 }
+            }
+        }
+        if(e.code === 'R') {
+            if (gameOver) {
+                resetGame();
+                // return;
             }
         }
     });
