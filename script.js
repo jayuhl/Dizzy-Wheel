@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const innerRadius = 190;
     const handLength = 180;
     const handWidth = 16;
+    const centerCircleRadius = handWidth / 2 - 1; // Radius for the new center circle
     const quadrantColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f']; // 0:Red, 1:Blue, 2:Green, 3:Yellow
 
     // Game state variables
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let handDirection = 1; // 1 for clockwise, -1 for counter-clockwise
     let gameSpeed = 1.5; // Degrees per frame
     let isPlaying = false;
-    let gameOver = true;
+    let gameOver = false;
 
     // ### Drawing Functions ###
 
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
         ctx.fillStyle = '#34495e';
         ctx.fill();
+
     }
 
     function drawHand() {
@@ -49,9 +51,27 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = handColor;
         ctx.fill();
         ctx.strokeStyle = 'black';
+        ctx.lineCap = 'round';
         ctx.stroke();
         ctx.restore();
         // console.log(prevAngle + " " + handAngle);
+        
+        //Draw the center indicator circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = handColor; // Use the current hand color
+        ctx.fill();
+
+        //Draw a circle at the outer end of the hand
+         // Convert the current angle to radians for trigonometric functions
+        const angleInRadians = (handAngle * Math.PI) / 180 - Math.PI / 2;
+        // Calculate the x and y coordinates of the hand's tip
+        const endX = centerX + handLength * Math.cos(angleInRadians);
+        const endY = centerY + handLength * Math.sin(angleInRadians);
+        ctx.beginPath();
+        ctx.arc(endX, endY, centerCircleRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = handColor; // Use the current hand color
+        ctx.fill();
     }
 
     // ### Game Logic Functions ###
@@ -74,17 +94,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         score = 0;
         handAngle = 0;
         prevAngle = 0;
         gameSpeed = 1.5;
         handDirection = 1;
-        isPlaying = true;
+        // isPlaying = true;
         gameOver = false;
         handColor = quadrantColors[Math.floor(Math.random() * 4)];
         scoreEl.textContent = `Score: ${score}`;
-        messageEl.style.display = 'none';
-        gameLoop();
+        messageEl.innerHTML = `Press Spacebar to Start`;
+        drawRing();
+        drawHand();
+        // messageEl.style.display = 'none';
+        // gameLoop();
     }
 
     function handleSuccess() {
@@ -135,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ### Event Listener ###
     
     window.addEventListener('keydown', (e) => {
+        console.log("Pressing..." + e.code);
         if (e.code === 'Space') {
             e.preventDefault();
             if (isPlaying) {
@@ -146,15 +171,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     handleFailure();
                 }
             }
+            else if (!gameOver) {
+                isPlaying = true;
+                messageEl.style.display = 'none';
+                gameLoop();
+            }
         }
-        if(e.code === 'R') {
+        if(e.code === 'KeyR') {
             if (gameOver) {
+                // console.log("This is Mr. Uhl's game code...");
                 resetGame();
-                // return;
+                return;
             }
         }
     });
 
     // Initial draw to show the starting screen
-    drawRing();
+    resetGame();
 });
