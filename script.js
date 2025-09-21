@@ -57,21 +57,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // console.log(prevAngle + " " + handAngle);
         
         //Draw the center indicator circle
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = handColor; // Use the current hand color
-        ctx.fill();
+        // ctx.beginPath();
+        // ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+        // ctx.fillStyle = handColor; // Use the current hand color
+        // ctx.fill();
 
         //Draw a circle at the outer end of the hand
          // Convert the current angle to radians for trigonometric functions
-        const angleInRadians = (handAngle * Math.PI) / 180 - Math.PI / 2;
+        // const angleInRadians = (handAngle * Math.PI) / 180 - Math.PI / 2;
         // Calculate the x and y coordinates of the hand's tip
-        const endX = centerX + handLength * Math.cos(angleInRadians);
-        const endY = centerY + handLength * Math.sin(angleInRadians);
-        ctx.beginPath();
-        ctx.arc(endX, endY, centerCircleRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = handColor; // Use the current hand color
-        ctx.fill();
+        // const endX = centerX + handLength * Math.cos(angleInRadians);
+        // const endY = centerY + handLength * Math.sin(angleInRadians);
+        // ctx.beginPath();
+        // ctx.arc(endX, endY, centerCircleRadius, 0, 2 * Math.PI);
+        // ctx.fillStyle = handColor; // Use the current hand color
+        // ctx.fill();
     }
 
     // ### Game Logic Functions ###
