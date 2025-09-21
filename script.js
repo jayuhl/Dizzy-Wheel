@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFailure() {
         isPlaying = false;
         gameOver = true;
-        messageEl.innerHTML = `Game Over!<br>Final Score: ${score}<br>Press Spacebar to Restart`;
+        messageEl.innerHTML = `Game Over!<br>Final Score: ${score}<br>Press 'R' to Restart`;
         messageEl.style.display = 'block';
     }
 
